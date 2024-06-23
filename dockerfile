@@ -20,6 +20,7 @@ USER root
 
 COPY cronfile /etc/cron.d/cronfile
 RUN chmod 0644 /etc/cron.d/cronfile
+RUN apt-get install -y cron
 RUN crontab /etc/cron.d/cronfile
 
 # Expose port if necessary (e.g., 3000 for typical web applications)
