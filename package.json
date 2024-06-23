@@ -1,0 +1,39 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "Scraping Bama and divar for A city get their Phone Number",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "swc src --out-dir dist ",
+    "start": "npm run build && node dist/src/main.js --experimental-repl-await",
+    "bama": "npm run build && node dist/src/bama.js --experimental-repl-await",
+    "divar": "npm run build && node dist/src/divar.js --experimental-repl-await",
+    "test": "npm run build && node dist/src/test.js --experimental-repl-await"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mirzaei81/scraper.git"
+  },
+  "keywords": [
+    "scraper",
+    "bama",
+    "divar"
+  ],
+  "author": "MthBest",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mirzaei81/scraper/issues"
+  },
+  "homepage": "https://github.com/Mirzaei81/scraper#readme",
+  "devDependencies": {
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.5.24"
+  },
+  "dependencies": {
+    "htmlparser2": "^9.1.0",
+    "puppeteer": "^22.10.0",
+    "puppeteer-cluster": "^0.24.0",
+    "typescript": "^5.4.5"
+  }
+}

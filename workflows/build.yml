@@ -1,0 +1,20 @@
+name: main
+on:
+  schedule:
+    - cron: "0 8-20 * * *" 
+  push:
+    branches: [master,main]
+  pull_request:
+    branches: [master,main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: "Install and Run"
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - run: npm ci
+    - run: npm run main
+
