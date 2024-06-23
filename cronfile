@@ -1,0 +1,1 @@
+ echo "0 8-20 * * * root  cd /app && npm run start >> /var/log/cron.log" 2>&1  
