@@ -1,7 +1,5 @@
 name: main
 on:
-  schedule:
-    - cron: "0 8-20 * * *" 
   push:
     branches: [master,main]
   pull_request:
