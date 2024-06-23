@@ -5,7 +5,7 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 WORKDIR /app
 RUN chmod -R a+rw .
 RUN chmod -R a+rw /app
-
+npx puppeteer install chrome
 # Copy the package.json and package-lock.json or yarn.lock first
 # This ensures that npm ci or yarn install runs optimally and layers cache efficiently
 COPY package.json ./
