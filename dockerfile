@@ -7,7 +7,6 @@ RUN chmod -R a+rw .
 # Copy the package.json and package-lock.json or yarn.lock first
 # This ensures that npm ci or yarn install runs optimally and layers cache efficiently
 COPY package.json ./
-COPY package-lock.json ./
 # Install dependencies
 RUN npm i
 
