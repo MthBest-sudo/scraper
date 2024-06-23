@@ -10,7 +10,7 @@ RUN chmod -R a+rw /app
 COPY package.json ./
 # Install dependencies
 RUN npm i
-npx puppeteer install chrome
+RUN npx puppeteer install chrome
 
 # Copy the remaining application code
 COPY src ./src
