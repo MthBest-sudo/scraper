@@ -16,11 +16,13 @@ RUN npm i
 COPY src ./src
 COPY .swrc ./.swrc
 COPY .env ./.env
-RUN touch /var/log/cron.log
-RUN (crontab -l ; echo "0 8-20 * * * cd /app && npm run start >> /var/log/cron.log") | crontab
+
+COPY cronfile /etc/cron.d/cronfile
+RUN chmod 0644 /etc/cron.d/cronfile
+RUN crontab /etc/cron.d/cronfile
 
 # Expose port if necessary (e.g., 3000 for typical web applications)
 EXPOSE 3000
 
 # Command to run the application
-CMD cron && tail -f /var/log/cron.log
+CMD ["cron", "-f"]
