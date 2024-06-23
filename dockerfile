@@ -8,11 +8,8 @@ RUN chmod -R a+rw .
 # This ensures that npm ci or yarn install runs optimally and layers cache efficiently
 COPY package.json ./
 COPY package-lock.json ./
-COPY node_modules ./
 # Install dependencies
 RUN npm i
-# Uncomment the following line if you are using yarn
-# RUN yarn install
 
 # Copy the remaining application code
 COPY src ./src
