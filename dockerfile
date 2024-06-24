@@ -3,7 +3,6 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 
 # Set the working directory
 VOLUME /env
-RUN chmod -R a+rw /env
 WORKDIR /app
 RUN chmod -R a+rw .
 RUN chmod -R a+rw /app
