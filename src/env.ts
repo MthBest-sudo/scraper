@@ -2,7 +2,7 @@ import fs from "fs"
 import os from "os"
 import path from "path"
 
-const envFilePath = path.resolve(process.cwd(), ".env");
+const envFilePath = path.resolve("/env/.env");
 
 // read .env file & convert to array
 const readEnvVars = () => fs.readFileSync(envFilePath, "utf-8").split(os.EOL);
