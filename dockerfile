@@ -16,7 +16,7 @@ RUN chmod -R a+rw /app
 # This ensures that npm ci or yarn install runs optimally and layers cache efficiently
 COPY package.json ./
 # Install dependencies
-RUN npm ci
+RUN npm i
 
 RUN npx @puppeteer/browsers install firefox@nightly
 RUN apt-get update && apt-get install cron -y
