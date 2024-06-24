@@ -11,7 +11,10 @@ export const getPhoneNumber = async (items: Item[], Token: string) => {
         maxConcurrency: 2,
         retryDelay:10000,
         retryLimit:3,
-        timeout:50000
+        timeout:50000,
+        puppeteerOptions:{
+            executablePath:"/usr/bin/google-chrome"
+        }
     });
     await cluster.execute(async({page})=>{
     const tokenCoockie: CookieParam[] = [

@@ -1,6 +1,7 @@
 import {  Ad } from './Bamatypes';
 import { Cluster } from 'puppeteer-cluster';
 import { send_messages } from './sendMessage.js';
+import { executablePath } from 'puppeteer';
 const attempts = 3
 const phoneNumbers:string[]= []
 export const getPhoneNumber = async (ads:Ad[]) => {
@@ -8,6 +9,9 @@ export const getPhoneNumber = async (ads:Ad[]) => {
   const cluster:Cluster<Ad> = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency: 2,
+    puppeteerOptions:{
+      executablePath:"/usr/bin/google-chrome"
+    }
   });
   cluster.task(async({page,data})=>{
     if (!data.detail?.title) throw new Error("title is nill")
