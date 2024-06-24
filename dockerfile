@@ -9,12 +9,13 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chrome that Puppeteer
 # installs, work.
+ARG CHROME_VERSION="126.0.6478.63"
 RUN apt-get update && apt-get install gnupg wget -y && \
-  wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
-  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-  apt-get update && \
-  apt-get install google-chrome-stable -y --no-install-recommends && \
-  rm -rf /var/lib/apt/lists/*
+  wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb && \
+  apt-get install -y /tmp/chrome.deb && \
+  apt-get install -y cron && \
+  rm -rf /var/lib/apt/lists/* && \ 
+  rm -rf /tmp/chrome.deb
 
 # Set the working directory
 VOLUME /env
@@ -36,8 +37,6 @@ USER root
 
 COPY cronfile /etc/cron.d/cronfile
 RUN chmod 0644 /etc/cron.d/cronfile
-RUN apt-get update 
-RUN apt-get install -y cron
 RUN crontab /etc/cron.d/cronfile
 
 # Expose port if necessary (e.g., 3000 for typical web applications)
