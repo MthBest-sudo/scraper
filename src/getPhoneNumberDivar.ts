@@ -3,6 +3,7 @@ import {  Item,Root } from './DivarTypes';
 import { lattofa } from './lattofa.js';
 import { Cluster } from 'puppeteer-cluster';
 import { send_messages } from './sendMessage.js';
+import puppeteer from 'puppeteer';
 export const getPhoneNumber = async (items: Item[], Token: string) => {
     const phoneNumbers: string[] = []
     //seting coockies
@@ -12,9 +13,7 @@ export const getPhoneNumber = async (items: Item[], Token: string) => {
         retryDelay:10000,
         retryLimit:3,
         timeout:50000,
-        puppeteerOptions:{
-            executablePath:"/usr/bin/google-chrome"
-        }
+        puppeteer,
     });
     await cluster.execute(async({page})=>{
     const tokenCoockie: CookieParam[] = [
@@ -30,6 +29,7 @@ export const getPhoneNumber = async (items: Item[], Token: string) => {
     await cluster.task(async ({ page, data }) => {
         await page.goto('https://divar.ir' + data.data.action.props.to);
         // Wait and click on first result
+        try{
         const searchResultSelector = '.kt-button.kt-button--primary.post-actions__get-contact';
         await page.waitForSelector(searchResultSelector);
         await page.click(searchResultSelector);
@@ -39,6 +39,9 @@ export const getPhoneNumber = async (items: Item[], Token: string) => {
         const phoneNumber = await textSelector?.evaluate(el => el.textContent);
         if (!phoneNumber) throw new Error("phone number is nill probebly is hidden by the user")
         send_messages(lattofa(phoneNumber),data.data.title)
+        }catch{
+            await page.screenshot({path:`/env/images/${data.data.title}.jpg`})
+        }
     })
 
     for (const ad of items) {
