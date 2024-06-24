@@ -9,6 +9,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # installs, work.
 ARG CHROME_VERSION="126.0.6478.63"
 RUN npx @puppeteer/browsers install chrome@${CHROME_VERSION}
+RUN apt-get install cron -y
 
 # Set the working directory
 VOLUME /env
@@ -20,7 +21,6 @@ RUN chmod -R a+rw /app
 COPY package.json ./
 # Install dependencies
 RUN npm i
-RUN npx puppeteer install chrome
 
 # Copy the remaining application code
 COPY src ./src
