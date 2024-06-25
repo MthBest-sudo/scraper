@@ -2,8 +2,6 @@ import {  Ad } from './Bamatypes';
 import { Cluster } from 'puppeteer-cluster';
 import { send_messages } from './sendMessage.js';
 import puppeteer,{ executablePath } from 'puppeteer';
-const attempts = 3
-const phoneNumbers:string[]= []
 export const getPhoneNumber = async (ads:Ad[]) => {
   // Launch the browser and open a new blank page
   const cluster:Cluster<Ad> = await Cluster.launch({
