@@ -1,1 +1,2 @@
-0 8-20 * * * root  cd /app && npm run start >> /var/log/cron.log 2>&1  
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+30 5-17 * * * /usr/local/bin/node /app/dist/src/main.js >> /env/cron.log 2>&1

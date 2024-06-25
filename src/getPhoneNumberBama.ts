@@ -10,6 +10,10 @@ export const getPhoneNumber = async (ads:Ad[]) => {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency: 2,
     puppeteer,
+    puppeteerOptions: {
+      executablePath: "/usr/bin/google-chrome",
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    }
   });
   cluster.task(async({page,data})=>{
     if (!data.detail?.title) throw new Error("title is nill")
