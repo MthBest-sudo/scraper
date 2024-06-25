@@ -19,7 +19,7 @@ COPY package.json ./
 RUN npm i
 
 RUN npx @puppeteer/browsers install chrome@126.0.6478.63
-RUN apt-get update && apt-get install cron vim -y && 
+RUN apt-get update && apt-get install cron vim -y 
 # Copy the remaining application code
 COPY src ./src
 COPY .swrc ./.swrc
