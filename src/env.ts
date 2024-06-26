@@ -1,9 +1,7 @@
 import fs from "fs"
 import os from "os"
-import path from "path"
 
-const envFilePath = "/env/.env"
-
+const envFilePath = process.env.env_path || "/env/.env"
 // read .env file & convert to array
 const readEnvVars = () => fs.readFileSync(envFilePath, "utf-8").split(os.EOL);
 
@@ -35,7 +33,7 @@ export const setEnvValue = (key, value) => {
     // update existing line
     const targetLineIndex = envVars.indexOf(targetLine);
     // replace the key/value with the new value
-    envVars.splice(targetLineIndex, 1, `${key}="${value}"`);
+    envVars.splice(targetLineIndex, 1, `${key}=${value}`);
   } else {
     // create new key value
     envVars.push(`${key}="${value}"`);

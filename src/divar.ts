@@ -1,11 +1,15 @@
 import {parse} from "./divarPareser.js"
-import { Item, Root } from "./DivarTypes.js";
+import {  Root } from "./DivarTypes.js";
 import { getEnvValue, setEnvValue } from "./env.js";
 import { getPhoneNumber } from "./getPhoneNumberDivar.js";
-import { retry } from "./retry.js";
 //diavr toeken for auth life time of 60 days 
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIzYzVlZGMyNy0wMjQ4LTRiNWYtYjNjMC0zYWY2ZDY4ZjhkYTYiLCJ1c2VyLXR5cGUiOiJwZXJzb25hbCIsInVzZXItdHlwZS1mYSI6Ilx1MDY3ZVx1MDY0Nlx1MDY0NCBcdTA2MzRcdTA2MmVcdTA2MzVcdTA2Y2MiLCJ1c2VyIjoiMDkxMDAyNjE3MjYiLCJpc3MiOiJhdXRoIiwidmVyaWZpZWRfdGltZSI6MTcxNzI0NTA5MywiaWF0IjoxNzE3MjQ1MDkzLCJleHAiOjE3MjI0MjkwOTN9.uN__5DdyPb03sD6m5JmpsgoLUwvxsRyudfbp1ILc5EA"
 export const divar =async ()=>{
+  let attempt = 0
+  const attempts = 5
+  let data: Root;
+  while(attempt<attempts){
+    try{
   const res = await fetch('https://divar.ir/s/kermanshah-province/car?usage=0-0', {
     headers: {
       'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
@@ -27,21 +31,33 @@ export const divar =async ()=>{
       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'
     }
   });
-  const txt: string = await res.text()
-  const dom = parse(txt);
-  const trimedDom = dom[5].slice(" window.__PRELOADED_STATE__ =  ".length, dom[5].lastIndexOf('};') + 1)
-  await retry(async(trimedDom)=>{
-    JSON.parse(trimedDom)
-    let data: Root = JSON.parse(trimedDom)
-    const items: Item[] = []
-    const last_ad = getEnvValue("last_divar_ad")
-    for (const ad of data.browse.items) {
-      if (ad.data.token == last_ad) {
-        break
-      }
-      items.push(ad)
+      const txt: string = await res.text()
+      const dom = parse(txt);
+      const trimedDom = dom[5].slice(" window.__PRELOADED_STATE__ =  ".length, dom[5].lastIndexOf('};') + 1)
+      data = JSON.parse(trimedDom)
+      break
     }
-    setEnvValue("last_divar_ad", data.browse.items[0].data.token)
-    await retry(getPhoneNumber, 5, 3000, items, token)
-  }, 5, 10000, trimedDom)
+    catch{
+      attempt+=1
+    }
+  }
+  //@ts-ignore
+  if(!data) throw new Error("data couldn't be find");
+  const items: string[] = []
+  const titles: string[] = []
+  const last_ad = getEnvValue("last_divar_ad")
+  for (const ad of data.browse.items) {
+    if (ad.data.token == last_ad) {
+      break
+    }
+    if (ad.data?.token && ad.data?.title) {
+      items.push(ad.data.token)
+      titles.push(ad.data.title)
+    }
+  }
+  setEnvValue("last_divar_ad", data.browse.items[0].data.token)
+  if (titles.length != items.length) throw new Error("title length and token don't add up propbebly the was nil value ");
+  for (let i = 0; i < items.length; i++) {
+    getPhoneNumber(items[i], token, titles[i])
+  }
 }

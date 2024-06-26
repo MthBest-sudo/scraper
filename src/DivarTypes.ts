@@ -37,7 +37,6 @@ export interface Root {
   multiCity: MultiCity
   widgets: Widgets
   modalPage: ModalPage
-  language: Language
 }
 
 export interface Nb {
@@ -407,7 +406,6 @@ export interface Items2 {
 }
 
 export interface BrandModelManufacturerOrigin {
-  additionalProperties: boolean
   properties: Properties4
   title: string
   type: string
@@ -418,6 +416,12 @@ export interface Properties4 {
 }
 
 export interface Value3 {
+  items: Items3
+  title: string
+  type: string
+}
+
+export interface Items3 {
   enum: string[]
   enumNames: string[]
   type: string
@@ -474,11 +478,11 @@ export interface Value6 {
 
 export interface Cities {
   default: string[]
-  items: Items3
+  items: Items4
   type: string
 }
 
-export interface Items3 {
+export interface Items4 {
   type: string
 }
 
@@ -494,13 +498,13 @@ export interface Properties8 {
 }
 
 export interface Value7 {
-  items: Items4
+  items: Items5
   minItems: number
   title: string
   type: string
 }
 
-export interface Items4 {
+export interface Items5 {
   enum: string[]
   enumNames: string[]
   type: string
@@ -540,12 +544,12 @@ export interface Properties10 {
 }
 
 export interface Value9 {
-  items: Items5
+  items: Items6
   title: string
   type: string
 }
 
-export interface Items5 {
+export interface Items6 {
   enum: string[]
   enumNames: string[]
   type: string
@@ -786,14 +790,14 @@ export interface Display {
 }
 
 export interface Value14 {
-  items: Items6
+  items: Items7
   "ui:options": UiOptions2
   "ui:placeholder": string
   "ui:title": string
   "ui:widget": string
 }
 
-export interface Items6 {}
+export interface Items7 {}
 
 export interface UiOptions2 {}
 
@@ -2407,21 +2411,21 @@ export interface Display2 {
 }
 
 export interface Value15 {
-  items: Items7
+  items: Items8
 }
 
-export interface Items7 {}
+export interface Items8 {}
 
 export interface BrandModelManufacturerOrigin2 {
   "ui:field": string
   "ui:options": UiOptions4
+  "ui:title": string
   urischema: Urischema3
   value: Value16
 }
 
 export interface UiOptions4 {
   "display-text-format": string
-  icon: string
   "is-advanced": boolean
   label: string
   "parent-category-slug": string
@@ -2433,15 +2437,20 @@ export interface Urischema3 {
 }
 
 export interface Display3 {
-  domestic: string[]
-  foreign: string[]
+  خارجی: string[]
+  داخلی: string[]
+  مونتاژ: string[]
 }
 
 export interface Value16 {
+  items: Items9
   "ui:options": UiOptions5
   "ui:placeholder": string
+  "ui:title": string
   "ui:widget": string
 }
+
+export interface Items9 {}
 
 export interface UiOptions5 {}
 
@@ -2829,6 +2838,7 @@ export interface UiOptions12 {
 export interface Color2 {
   "ui:field": string
   "ui:options": UiOptions13
+  urischema: Urischema7
   value: Value20
 }
 
@@ -2873,7 +2883,6 @@ export interface Children5 {
 export interface Search3 {
   enabled: boolean
 }
-
 
 export interface Value20 {}
 
@@ -2941,14 +2950,14 @@ export interface Display9 {
 }
 
 export interface Value22 {
-  items: Items8
+  items: Items10
   "ui:options": UiOptions17
   "ui:placeholder": string
   "ui:title": string
   "ui:widget": string
 }
 
-export interface Items8 {}
+export interface Items10 {}
 
 export interface UiOptions17 {}
 
@@ -3454,14 +3463,11 @@ export interface DefaultReducer {
 
 export interface CurrentPost {
   renderPostSuccess: boolean
-  reportReasonsSuccess: boolean
-  reportReasons: any
   sourceType: string
   getContactBlocked: boolean
   getContactBlockedError: any
   post: Post
   hasError: boolean
-  isReportModalOpen: boolean
 }
 
 export interface Post {
@@ -3742,7 +3748,4 @@ export interface ModalPage {
   requestCache: RequestCache
   currentPageIndex: number
 }
-
 export interface RequestCache {}
-
-export interface Language {}

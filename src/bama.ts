@@ -1,4 +1,4 @@
-import { Ad, Root } from "./Bamatypes.js";
+import {  Root } from "./Bamatypes.js";
 import { getEnvValue, setEnvValue } from "./env.js";
 import { getPhoneNumber } from "./getPhoneNumberBama.js";
 export const bama  =async()=>{
@@ -23,15 +23,21 @@ const res= await fetch("https://bama.ir/cad/api/search?mileageFrom=0&mileageTo=0
   "method": "GET"
 });
 const data:Root = await res.json()
-const ads:Ad[] = []
+const tokens:string[] = []
+const title:string[] = []
 const last_ad = getEnvValue("last_bama_ad")
 for(const ad of data.data.ads){
     if(ad.detail?.code==last_ad){
         break;
     }
-    ads.push(ad)
+  if (ad.detail?.code && ad.detail?.title) {
+    tokens.push(ad.detail?.code)
+    title.push(ad.detail?.title)
+  }
 }
 setEnvValue("last_bama_ad",data.data.ads[0].detail?.code)
-console.log(data.data.ads[0].detail?.code)
-await getPhoneNumber(ads)
+if (title.length != tokens.length) throw new Error("title length and token don't add up propbebly the was nil value ");
+  for (let i = 0; i < title.length; i++) {
+    await getPhoneNumber(tokens[i],title[i])
+  }
 }

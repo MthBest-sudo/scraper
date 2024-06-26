@@ -1,6 +1,19 @@
+export interface tel_Root {
+  status: boolean
+  errors: any[]
+  metadata: any
+  data: tel_Data
+}
+
+export interface tel_Data {
+  phone: any
+  mobile: string[]
+}
+
 export interface Root {
     metadata: Metadata
     status: boolean
+
     errors: any[]
     data: Data
   }

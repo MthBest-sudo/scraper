@@ -1,58 +1,28 @@
-import  { CookieParam } from 'puppeteer';
-import {  Item,Root } from './DivarTypes';
-import { lattofa } from './lattofa.js';
-import { Cluster } from 'puppeteer-cluster';
 import { send_messages } from './sendMessage.js';
-import puppeteer from 'puppeteer';
-export const getPhoneNumber = async (items: Item[], Token: string) => {
-    const phoneNumbers: string[] = []
-    //seting coockies
-    const cluster:Cluster<Item,void> = await Cluster.launch({
-        concurrency: Cluster.CONCURRENCY_PAGE,
-        maxConcurrency: 2,
-        retryDelay:10000,
-        retryLimit:3,
-        timeout:50000,
-        puppeteer,
-        puppeteerOptions:{
-            executablePath:"/usr/bin/google-chrome",
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-
-        }
-    });
-    await cluster.execute(async({page})=>{
-    const tokenCoockie: CookieParam[] = [
-        {
-            name: "token", value: Token, path: "/", domain: ".divar.ir",
-            expires: -1, secure: false, priority: "Medium",
-            sameSite: "Lax", sourceScheme: "Secure"
+export const getPhoneNumber = async (token:string, auth_Token: string,title:string) => {
+    const res = await fetch(`https://api.divar.ir/v8/postcontact/web/contact_info/${token}`, {
+        "headers": {
+            "accept": "application/json, text/plain, */*",
+            "accept-language": "en-US,en;q=0.7",
+            "authorization": `Basic ${auth_Token}`,
+            "priority": "u=1, i",
+            "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Brave\";v=\"126\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site",
+            "sec-gpc": "1",
+            "Referer": "https://divar.ir/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
         },
-    ]
-    await page.goto("https://divar.ir/s/kermanshah",{timeout:120000})
-    await page.setCookie(...tokenCoockie)
-    })
-    await cluster.task(async ({ page, data }) => {
-        await page.goto('https://divar.ir' + data.data.action.props.to);
-        // Wait and click on first result
-        try{
-        const searchResultSelector = '.kt-button.kt-button--primary.post-actions__get-contact';
-        await page.waitForSelector(searchResultSelector);
-        await page.click(searchResultSelector);
-        const textSelector = await page.waitForSelector(
-            '#app > div:nth-child(1) > div > div > main > article > div > div.kt-col-5 > section:nth-child(1) > div.expandable-box > div.copy-row > div > div.kt-base-row__end.kt-unexpandable-row__value-box > a', { timeout: 1000 }
-        );
-        const phoneNumber = await textSelector?.evaluate(el => el.textContent);
-        if (!phoneNumber) throw new Error("phone number is nill probebly is hidden by the user")
-        send_messages(lattofa(phoneNumber),data.data.title)
-        }catch{
-            await page.screenshot({path:`/env/images/${data.data.title}.jpg`})
-        }
-    })
-
-    for (const ad of items) {
-        cluster.queue(ad)
-    }
-
-    await cluster.idle()
-    await cluster.close();
+        "body": null,
+        "method": "GET"
+    });
+    const data = await res.json()
+    console.log(data,res.status)
+    const PhoneNumber:string =data.widget_list[0].data.value 
+    if(!PhoneNumber) throw new Error("Divar Phone Number Not Found");
+    console.log(PhoneNumber+"found in divar")
+    send_messages(PhoneNumber,title)
 };

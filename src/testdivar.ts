@@ -1,53 +1,32 @@
-import puppeteer, { CookieParam } from "puppeteer";
-import { Item, Root } from "./DivarTypes.js";
-import { sleep } from "./sleep.js";
 import { parse } from "./divarPareser.js";
-import { retry } from "./retry.js";
-import { getEnvValue } from "./env.js";
-import { send_messages } from "./sendMessage.js";
-const attempts = 3
-export const getPhoneNumber = async (ads:Item[],Token:string) => {
-    const phoneNumbers:string[]= []
-  // Launch the browser and open a new blank page
-    const browser = await puppeteer.launch({headless:false});
-    const page = await browser.newPage();
-    //seting coockies
-    const tokenCoockie: CookieParam[] = [{ name: "token", value: Token,path:"/",domain:".divar.ir",expires:-1,secure:false,priority:"Medium",sameSite:"Lax",sourceScheme:"Secure"}]
+import { getEnvValue, setEnvValue } from "./env.js";
+import {writeFileSync} from "fs"
+import { Root } from "./DivarTypes.js";
 
-    await page.goto('https://divar.ir');
-    await page.setCookie(...tokenCoockie)
-    // Navigate the page to a URL
-    for (const ad of items.slice(0,4)) {
-        await page.goto('https://divar.ir' + ad.data.action.props.to);
-        // Wait and click on first result
-        const searchResultSelector = '.kt-button.kt-button--primary.post-actions__get-contact';
-        await page.waitForSelector(searchResultSelector);
-        await page.click(searchResultSelector);
-        let attempt = 0
-        while (attempt < attempts) {
-            try {
-                // Locate the full title with a unique string
-                const textSelector = await page.waitForSelector(
-                    '#app > div:nth-child(1) > div > div > main > article > div > div.kt-col-5 > section:nth-child(1) > div.expandable-box > div.copy-row > div > div.kt-base-row__end.kt-unexpandable-row__value-box > a', { timeout: 1000 }
-                );
-                const phoneNumber = await textSelector?.evaluate(el => el.textContent);
-                if(!phoneNumber) throw new Error("phone number not found somthing went worng ")
-                // Print the full title
-                send_messages("09100261726",ad.data.title)
-                break;
-            } catch {
-                try {
-                    const conformation = await page.waitForSelector(".kt-button.kt-button--primary.full-width",{timeout:1000})
-                    conformation?.click()
-                } catch { }
-                await sleep(1000)
-                attempt++
-            }
-        }
-    }
-    await browser.close();
+const auth_token  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiI1NmUwNjBjZS0yYjUyLTRlMDAtOWUzNS02OGFmYTIzNTBhMzAiLCJ1c2VyLXR5cGUiOiJwZXJzb25hbCIsInVzZXItdHlwZS1mYSI6Ilx1MDY3ZVx1MDY0Nlx1MDY0NCBcdTA2MzRcdTA2MmVcdTA2MzVcdTA2Y2MiLCJ1c2VyIjoiMDkxMjc4NjUxNjQiLCJpc3MiOiJhdXRoIiwidmVyaWZpZWRfdGltZSI6MTcxOTM5NDY3NywiaWF0IjoxNzE5Mzk0Njc3LCJleHAiOjE3MjQ1Nzg2Nzd9.qQKwsWAdo3EG1MNCCuhMekXpoDEbmMV8dgUFUhffdEU"
+
+export const getPhoneNumber = async (token:string) => {
+ const res = await  fetch(`https://api.divar.ir/v8/postcontact/web/contact_info/${token}`, {
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "accept-language": "en-US,en;q=0.7",
+      "authorization": `Basic ${auth_token}`,
+      "priority": "u=1, i",
+      "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Brave\";v=\"126\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-site",
+      "sec-gpc": "1",
+      "Referer": "https://divar.ir/",
+      "Referrer-Policy": "strict-origin-when-cross-origin"
+    },
+    "body": null,
+    "method": "GET"
+  });
+  const data =await res.json()
 };
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIzYzVlZGMyNy0wMjQ4LTRiNWYtYjNjMC0zYWY2ZDY4ZjhkYTYiLCJ1c2VyLXR5cGUiOiJwZXJzb25hbCIsInVzZXItdHlwZS1mYSI6Ilx1MDY3ZVx1MDY0Nlx1MDY0NCBcdTA2MzRcdTA2MmVcdTA2MzVcdTA2Y2MiLCJ1c2VyIjoiMDkxMDAyNjE3MjYiLCJpc3MiOiJhdXRoIiwidmVyaWZpZWRfdGltZSI6MTcxNzI0NTA5MywiaWF0IjoxNzE3MjQ1MDkzLCJleHAiOjE3MjI0MjkwOTN9.uN__5DdyPb03sD6m5JmpsgoLUwvxsRyudfbp1ILc5EA"
   const res = await fetch('https://divar.ir/s/kermanshah-province/car?usage=0-0', {
     headers: {
       'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
@@ -72,18 +51,18 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIzYzVlZGMyNy0wMjQ4
   const txt: string = await res.text()
   const dom = parse(txt);
   const trimedDom = dom[5].slice(" window.__PRELOADED_STATE__ =  ".length, dom[5].lastIndexOf('};') + 1)
-  retry((trimedDom)=>{
-    JSON.parse(trimedDom)
-  },5,10000,trimedDom)
   let data:Root =JSON.parse(trimedDom)
-  const items:Item[] = []
+  const items:string[] = []
   const last_ad = getEnvValue("last_divar_ad")
-  for(const ad of data.browse.items.slice(0,3)){
-    if(ad.data.token ==last_ad){
-        items.push(ad)
+  console.log(last_ad)
+  for(const ad of data.browse.items){
+    if(ad.data.token == last_ad){
         break
     }
-    items.push(ad)
+    console.log(ad.data.token)
   }
-  console.log(items.length)
-await retry(getPhoneNumber,5,3000,items,token)
+  setEnvValue("last_divar_ad",data.browse.items[0].data.token)
+  console.log(getEnvValue("last_divar_ad"))
+  for(const token of items){
+      getPhoneNumber(token)
+  }

@@ -7,8 +7,8 @@
   "scripts": {
     "build": "swc src --out-dir dist ",
     "start": "npm run build && node dist/src/main.js --experimental-repl-await",
-    "bama": "npm run build && node dist/src/bama.js --experimental-repl-await",
-    "divar": "npm run build && node dist/src/divar.js --experimental-repl-await",
+    "bama": "npm run build && node dist/src/testbama.js --experimental-repl-await",
+    "divar": "npm run build && node dist/src/testdivar.js --experimental-repl-await",
     "test": "npm run build && node dist/src/test.js --experimental-repl-await"
   },
   "repository": {
@@ -32,8 +32,6 @@
   },
   "dependencies": {
     "htmlparser2": "^9.1.0",
-    "puppeteer": "^22.10.0",
-    "puppeteer-cluster": "^0.24.0",
     "typescript": "^5.4.5"
   }
 }
