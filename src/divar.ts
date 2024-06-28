@@ -3,7 +3,8 @@ import {  Root } from "./DivarTypes.js";
 import { getEnvValue, setEnvValue } from "./env.js";
 import { getPhoneNumber } from "./getPhoneNumberDivar.js";
 //diavr toeken for auth life time of 60 days 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIzYzVlZGMyNy0wMjQ4LTRiNWYtYjNjMC0zYWY2ZDY4ZjhkYTYiLCJ1c2VyLXR5cGUiOiJwZXJzb25hbCIsInVzZXItdHlwZS1mYSI6Ilx1MDY3ZVx1MDY0Nlx1MDY0NCBcdTA2MzRcdTA2MmVcdTA2MzVcdTA2Y2MiLCJ1c2VyIjoiMDkxMDAyNjE3MjYiLCJpc3MiOiJhdXRoIiwidmVyaWZpZWRfdGltZSI6MTcxNzI0NTA5MywiaWF0IjoxNzE3MjQ1MDkzLCJleHAiOjE3MjI0MjkwOTN9.uN__5DdyPb03sD6m5JmpsgoLUwvxsRyudfbp1ILc5EA"
+const token = getEnvValue("coockies")?.split(",")
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIzYzVlZGMyNy0wMjQ4LTRiNWYtYjNjMC0zYWY2ZDY4ZjhkYTYiLCJ1c2VyLXR5cGUiOiJwZXJzb25hbCIsInVzZXItdHlwZS1mYSI6Ilx1MDY3ZVx1MDY0Nlx1MDY0NCBcdTA2MzRcdTA2MmVcdTA2MzVcdTA2Y2MiLCJ1c2VyIjoiMDkxMDAyNjE3MjYiLCJpc3MiOiJhdXRoIiwidmVyaWZpZWRfdGltZSI6MTcxNzI0NTA5MywiaWF0IjoxNzE3MjQ1MDkzLCJleHAiOjE3MjI0MjkwOTN9.uN__5DdyPb03sD6m5JmpsgoLUwvxsRyudfbp1ILc5EA"
 export const divar =async ()=>{
   let attempt = 0
   const attempts = 5
@@ -57,6 +58,7 @@ export const divar =async ()=>{
   }
   setEnvValue("last_divar_ad", data.browse.items[0].data.token)
   if (titles.length != items.length) throw new Error("title length and token don't add up propbebly the was nil value ");
+  if(!token) throw new Error("Tokens are nill");
   for (let i = 0; i < items.length; i++) {
     getPhoneNumber(items[i], token, titles[i])
   }

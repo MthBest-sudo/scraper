@@ -27,8 +27,9 @@ while (retry_count < total_retry) {
         accessToken = token.data.jwtLoginResponse.accessToken
         refreshToken = token.data.jwtLoginResponse.refreshToken
         break
-    } catch {
+    } catch(e) {
         retry_count += 1
+        console.error(e)
     }
 
 }
@@ -43,12 +44,11 @@ const user = "%7B%22data%22%3A%7B%22mobile%22%3A%220936****149%22%2C%22token%22%
 export const send_messages=async(phoneNumbers:string,title:string)=>{
    const text=` سلام خودرو صفر شما ${title} را باقیمت مناسب خریدارم
     تسویه نقدی
-    ادرس : کنگاور خیابان طالقانی دفتر خرید حواله و خودرو صفر
-    وبسایت: rezaeekhodro.com
-    شماره:09183386649`
+    ادرس : کنگاور خیابان طالقانی دفتر خرید حواله و خودرو صفر شماره:09183386649`
     const body = {"sendScheduled":false,"hour":date.getHours(),"min":date.getMinutes(),
         "date":`${year}/${month}/${day}`,
         "receptors":[phoneNumbers],"message":text,"lineId":691}
+    console.log(body)
     const res = await fetch("https://console.kavenegar.com/api/v1.0/send/simple", {
         "headers": {
             "accept": "application/json, text/plain, */*",

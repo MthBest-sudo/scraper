@@ -14,6 +14,8 @@ export const lattofa=(phoneN:string)=>{
     let LatPhoneN = ""
     for (let i = 0; i < phoneN.length; i++) {
         LatPhoneN += digitMap[phoneN[i]]
+        if(!digitMap[phoneN[i]]) throw new Error("پبام در چت ");
+        
     }
     return  LatPhoneN
 }
