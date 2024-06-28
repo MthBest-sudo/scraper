@@ -1,10 +1,5 @@
 name: ci
-on:
-  schedule:
-    - cron: "30 5-17 * * *"
-  push:
-    branches:
-      - 'main'
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: mthbest-sudo/scraper
