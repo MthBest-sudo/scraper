@@ -23,9 +23,14 @@ export const getPhoneNumber = async (token:string,title:string) => {
     "body": null,
     "method": "GET"
   });
-  const data:tel_Root = await res.json()
-  const PhoneNumber = data.data.phone[0]
-  if(!PhoneNumber) throw new Error("Bama Phone Number Not Found");
-  console.log(PhoneNumber + "found in bama")
-  send_messages(PhoneNumber,title)
+  try {
+    const data: tel_Root = await res.json()
+    const PhoneNumber = data.data.phone[0]
+    if (!PhoneNumber) throw new Error("Bama Phone Number Not Found");
+    console.log(PhoneNumber + "found in bama")
+    send_messages(PhoneNumber, title)
+  }
+  catch{
+
+  }
 };
