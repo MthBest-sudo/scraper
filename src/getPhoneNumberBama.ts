@@ -3,6 +3,7 @@ import { send_messages } from "./sendMessage.js";
 
 export const getPhoneNumber = async (token:string,title:string) => {
   // Launch the browser and open a new blank page
+  try{
   const res = await fetch(`https://bama.ir/cad/api/detail/${token}/phone`, {
     "headers": {
       "accept": "application/json, text/plain, */*",
@@ -23,6 +24,7 @@ export const getPhoneNumber = async (token:string,title:string) => {
     "body": null,
     "method": "GET"
   });
+<<<<<<< HEAD
   try {
     const data: tel_Root = await res.json()
     const PhoneNumber = data.data.phone[0]
@@ -34,3 +36,12 @@ export const getPhoneNumber = async (token:string,title:string) => {
 
   }
 };
+=======
+  const data:tel_Root = await res.json()
+  const PhoneNumber = data.data.phone[0]
+  if(!PhoneNumber) throw new Error("Bama Phone Number Not Found");
+  console.log(PhoneNumber + "found in bama")
+  send_messages(PhoneNumber,title)
+  }catch{}
+};
+>>>>>>> dd7acf494d60ed0823d05dee43e80e15dd927f06
