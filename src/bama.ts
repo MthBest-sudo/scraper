@@ -22,12 +22,12 @@ const res= await fetch("https://bama.ir/cad/api/search?mileageFrom=0&mileageTo=0
   "body": null,
   "method": "GET"
 });
+console.log(res.status)
 const data:Root = await res.json()
 const tokens:string[] = []
 const title:string[] = []
 const last_ad = getEnvValue("last_bama_ad")
 for(const ad of data.data.ads){
-
     if(ad.detail?.code==last_ad){
         break;
     }

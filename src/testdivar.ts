@@ -54,7 +54,6 @@ export const getPhoneNumber = async (token:string) => {
   let data:Root =JSON.parse(trimedDom)
   const items:string[] = []
   const last_ad = getEnvValue("last_divar_ad")
-  console.log(last_ad)
   for(const ad of data.browse.items){
     if(ad.data.token == last_ad){
         break

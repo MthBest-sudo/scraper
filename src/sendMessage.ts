@@ -47,8 +47,7 @@ export const send_messages=async(phoneNumbers:string,title:string)=>{
     ادرس : کنگاور خیابان طالقانی دفتر خرید حواله و خودرو صفر شماره:09183386649`
     const body = {"sendScheduled":false,"hour":date.getHours(),"min":date.getMinutes(),
         "date":`${year}/${month}/${day}`,
-        "receptors":[phoneNumbers],"message":text,"lineId":691}
-    console.log(body)
+        "receptors":[phoneNumbers],"message":text,"lineId":1423}
     const res = await fetch("https://console.kavenegar.com/api/v1.0/send/simple", {
         "headers": {
             "accept": "application/json, text/plain, */*",
